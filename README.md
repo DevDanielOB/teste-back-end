@@ -7,7 +7,7 @@ Welcome to the URL Shortener Project! This application provides a simple and eff
 - 🌐 **NestJS**: Framework for a structured and scalable architecture.
 - 📊 **TypeORM**: Database manipulation and ORM.
 - 📊 **Swagger**: Comprehensive API documentation.
-- 🔐 **Authentication**: Secure access using tokens.
+- 🔐 **Authentication**: JWT
 - ⏳ **Scheduled Cleanup**: Automatically deletes old anonymous URLs.
 
 ## 🎩 Technologies Used
@@ -17,7 +17,7 @@ Welcome to the URL Shortener Project! This application provides a simple and eff
 - **Swagger** for API documentation
 - **PostgreSQL/MySQL** (configurable with TypeORM)
 
-## 📄 Prerequisites
+## 📄 Pre-requisites
 Ensure you have the following installed:
 - **Node.js** v20 or higher
 - **npm** (Node Package Manager)
@@ -28,7 +28,7 @@ Follow these steps to set up and run the project:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/url-shortener.git
+git clone https://github.com/your-username/url-shortener.git](https://github.com/DevDanielOB/teste-back-end.git
 cd url-shortener
 ```
 
@@ -39,32 +39,37 @@ npm install
 ```
 
 ### 3. Configure the Environment
-Create a `.env` file in the root directory and configure the following variables:
+Create a `.env` file in the root directory and configure the following variables or use the .env.example
 ```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=your_db_user
-DB_PASSWORD=your_db_password
-DB_NAME=url_shortener
-BASE_URL=http://localhost:3000
-JWT_SECRET=your_secret_key
+################################# SQL ##########################################################
+SQL_SERVER_DEVELOPMENT_BR=N
+SQL_SERVER_HOST=localhost
+SQL_SERVER_PORT=1433
+SQL_SERVER_USER='sa'
+SQL_SERVER_PASSWORD='dados'
+SQL_SERVER_DATABASE='db-teste-back-end'
+SQL_SERVER_POOL_SIZE=200
+SQL_SERVER_SSL=N
+SQL_SERVER_TIMEOUT_SECONDS=30000
+TYPEORM_APPLY_MIGRATION_ON_STARTUP='N'
+
+##################### API ##########################################################
+NODE_ENV='development'
+PORT=3498
+JWT_SECRET='GqAUNp-hWjIJctiM0s4cDC33msGVmCAl2wCoueCeEvxFLKa2gE30VEfjNcSP9jLsBg3ei-svhJpOZ2TUWXuZTw'
+APP_URL='http://localhost'
+
 ```
 
-### 4. Run Migrations
-Apply the database migrations:
-```bash
-npm run migration:run
-```
-
-### 5. Start the Application
+### 4. Start the Application
 Run the server in development mode:
 ```bash
-npm run start:dev
+npm start
 ```
 
 The application will be available at `http://localhost:3000`.
 
-### 6. Access the API Documentation
+### 5. Access the API Documentation
 Open the Swagger API documentation at:
 ```
 http://localhost:3000/api
