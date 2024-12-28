@@ -1,6 +1,6 @@
 import { ConsoleLogger } from '@nestjs/common';
 import { plainToInstance, Transform } from 'class-transformer';
-import { IsEnum, IsNumber, ValidateNested } from 'class-validator';
+import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { Environment } from '../enums/env.enum';
 import { readEnv } from '../read-env';
 import { DatabaseEnvironment } from './database.env';
@@ -19,6 +19,9 @@ export class AppEnvironment {
 
   @ValidateNested()
   database: DatabaseEnvironment;
+
+  @IsString()
+  jwtSecret: string;
 
   config() {
     const newEnv = plainToInstance(AppEnvironment, readEnv(), {

@@ -22,6 +22,7 @@ export const readEnv = () => {
         process.env.SQL_SERVER_TIMEOUT_SECONDS ?? 30000
       };trustServerCertificate=true;connectionLimit=${process.env.SQL_SERVER_POOL_SIZE ?? 10}`,
     },
+    jwtSecret: process.env.JWT_SECRET,
   } as unknown as AppEnvironment;
 
   return envReaded;

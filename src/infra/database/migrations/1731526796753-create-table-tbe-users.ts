@@ -31,7 +31,7 @@ export class CreateTableTbeUsers1731526796753 implements MigrationInterface {
         },
         {
           name: 'user_email',
-          type: 'smallint',
+          type: 'varchar(100)',
           isNullable: false,
           comment: 'Email do usuário / User email',
         },
