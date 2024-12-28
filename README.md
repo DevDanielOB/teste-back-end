@@ -71,7 +71,7 @@ The application will be available at `http://localhost:3000`.
 ### 5. Access the API Documentation
 Open the Swagger API documentation at:
 ```
-http://localhost:3000/api
+http://localhost:3498/swagger#/
 ```
 
 ## 🏆 Contribution
