@@ -71,7 +71,7 @@ export class UserController {
       '"access_token": "eyJhbTciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRhbmllbC5vbGl2ZWIyYUBlbWFpbC5jb20iLCJzdWIiOiIxIiwiaWF0IjoxNzM1MzQ1NzM3LCJleHAiOjE3MzUzNDkzMzd9.ny-ZJr0wMw-c7LpRPjjaSPleZ2bS6XCbNd9uY2OtWug"',
     type: String,
   })
-  async login(@Body() body: AuthDto) {
+  async auth(@Body() body: AuthDto) {
     const { email, password } = body;
     return this.authService.auth(email, password);
   }

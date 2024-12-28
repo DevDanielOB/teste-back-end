@@ -17,19 +17,7 @@ export class UsersRepository
     return await this.save(user);
   }
 
-  async getUserById(id: number): Promise<User | undefined> {
-    return await this.findOne({ where: { id } });
-  }
-
   async getUserByEmail(email: string): Promise<User | undefined> {
     return await this.findOne({ where: { userEmail: email } });
-  }
-
-  async updateUser(id: string, user: Partial<User>) {
-    await this.createQueryBuilder()
-      .update(User)
-      .set(user)
-      .where('id = :id', { id })
-      .execute();
   }
 }

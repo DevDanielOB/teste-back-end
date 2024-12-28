@@ -1,9 +1,11 @@
+import { Url } from 'src/features/urls/models/url.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   Index,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('tbe_users')
@@ -53,4 +55,7 @@ export class User {
       'Data e hora de criação do registro / Record creation date and time',
   })
   creationTimestamp: Date;
+
+  @OneToMany(() => Url, (url) => url.user)
+  urls: Url[];
 }

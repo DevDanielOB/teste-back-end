@@ -34,6 +34,7 @@
     "jsonwebtoken": "^9.0.2",
     "keycloak-connect": "^26.0.7",
     "mssql": "^10.0.4",
+    "nanoid": "^5.0.9",
     "nest-keycloak-connect": "^1.10.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",

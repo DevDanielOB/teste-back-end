@@ -23,6 +23,9 @@ export class AppEnvironment {
   @IsString()
   jwtSecret: string;
 
+  @IsString()
+  base_url: string;
+
   config() {
     const newEnv = plainToInstance(AppEnvironment, readEnv(), {
       enableImplicitConversion: true,

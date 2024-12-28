@@ -23,6 +23,7 @@ export const readEnv = () => {
       };trustServerCertificate=true;connectionLimit=${process.env.SQL_SERVER_POOL_SIZE ?? 10}`,
     },
     jwtSecret: process.env.JWT_SECRET,
+    base_url: `${process.env.APP_URL}:${process.env.PORT}`,
   } as unknown as AppEnvironment;
 
   return envReaded;
