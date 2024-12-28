@@ -61,7 +61,7 @@ APP_URL='http://localhost'
 ```
 
 ### 4. Start the Application
-Run the server in development mode:
+Run the server
 ```bash
 npm start
 ```
