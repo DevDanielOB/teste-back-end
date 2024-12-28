@@ -7,8 +7,7 @@ Welcome to the URL Shortener Project! This application provides a simple and eff
 - 🌐 **NestJS**: Framework for a structured and scalable architecture.
 - 📊 **TypeORM**: Database manipulation and ORM.
 - 📊 **Swagger**: Comprehensive API documentation.
-- 🔐 **Authentication**: JWT
-- ⏳ **Scheduled Cleanup**: Automatically deletes old anonymous URLs.
+- 🔐 **Authentication**: JWT-based auth
 
 ## 🎩 Technologies Used
 - **Node.js** (v20 or higher)
@@ -77,7 +76,4 @@ http://localhost:3000/api
 
 ## 🏆 Contribution
 Contributions are welcome! Feel free to open issues or submit pull requests to improve the project.
-
-## 🙏 Acknowledgments
-Thanks to the open-source community for providing such powerful tools and frameworks to build this project.
 
