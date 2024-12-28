@@ -27,7 +27,7 @@ Follow these steps to set up and run the project:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/url-shortener.git](https://github.com/DevDanielOB/teste-back-end.git
+git clone https://github.com/DevDanielOB/teste-back-end.git
 cd url-shortener
 ```
 
