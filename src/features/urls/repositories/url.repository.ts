@@ -14,10 +14,34 @@ export class UrlsRepository
   }
 
   async shortenUrl(originalUrl: Partial<Url>): Promise<Url> {
-    return await this.save(originalUrl);
+    return await this.save({ ...originalUrl });
   }
 
   async findUrlByShortUrl(shortUrl: string): Promise<Url | undefined> {
     return await this.findOne({ where: { shortUrl } });
+  }
+
+  async findUrlByOriginalUrl(
+    originalUrl: string,
+    userId?: number,
+  ): Promise<Url | undefined> {
+    return await this.findOne({ where: { originalUrl, userId } });
+  }
+
+  async updateUrlWithClickCount(shortUrl: string): Promise<void> {
+    await this.update({ shortUrl }, { clickCount: () => 'clickCount + 1' });
+  }
+
+  async findUrlsByUserId(userId: number): Promise<Url[]> {
+    return await this.find({
+      where: {
+        userId,
+        deletedAt: null,
+      },
+    });
+  }
+
+  async deleteUrl(filters: Partial<Url>): Promise<void> {
+    await this.update(filters, { deletedAt: new Date() });
   }
 }

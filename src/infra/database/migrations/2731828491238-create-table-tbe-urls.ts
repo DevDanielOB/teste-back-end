@@ -31,7 +31,7 @@ export class CreateTableTbeUrls1731526796754 implements MigrationInterface {
         },
         {
           name: 'original_url',
-          type: 'text',
+          type: 'varchar(max)',
           isNullable: false,
           comment:
             'URL original fornecida pelo usuário / Original URL provided by the user',

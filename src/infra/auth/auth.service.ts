@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthPayload } from 'src/features/users/interfaces/auth-jwt.interface';
 import { UserService } from 'src/features/users/services/user.service';
@@ -29,5 +33,20 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
 
     return { access_token: token };
+  }
+
+  decodeToken(token: string): { email: string; id: string } {
+    try {
+      const decoded = this.jwtService.verify(token);
+      const { email, sub: id } = decoded;
+
+      if (!email || !id) {
+        throw new UnauthorizedException('Invalid bearer token format');
+      }
+
+      return { email, id };
+    } catch (e) {
+      throw new UnauthorizedException(`Invalid token: ${e.message}`);
+    }
   }
 }

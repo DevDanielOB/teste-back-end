@@ -44,6 +44,8 @@ export class UserService implements IUserService {
       });
 
       const createdUser = await this.userRepository.createUser(user);
+
+      delete createdUser.passwordHash;
       return createdUser;
     } catch (e) {
       Logger.error('Error creating user', e.stack);
