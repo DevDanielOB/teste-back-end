@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import {
   BadRequestException,
   ConflictException,
@@ -10,7 +11,8 @@ import { EUserProviderKeys } from '../enums/user-providers.enum';
 import { IUsersRepository } from '../interfaces/user-repository.interface';
 import { User } from '../models/user.entity';
 import { plainToClass } from 'class-transformer';
-import * as bcrypt from 'bcrypt';
+const bcrypt = require('bcryptjs');
+
 import { IUserService } from '../interfaces/user-service.interface';
 
 @Injectable()

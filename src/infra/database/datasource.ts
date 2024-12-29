@@ -7,8 +7,8 @@ env.config();
 
 const datasource = new DataSource({
   type: 'mssql',
-  host: env.database.host,
-  port: env.database.port,
+  host: env.database.host ?? 'localhost',
+  port: env.database.port ?? 1433,
   username: env.database.username,
   password: env.database.password,
   database: env.database.database,

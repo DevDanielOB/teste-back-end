@@ -76,9 +76,9 @@ http://localhost:3498/swagger#/
 ### 6. Run the Tests
 Run the tests
 bash
-npm test -- For unit tests
+yarn test -- For unit tests
 bash
-npm test:cov -- For unit tests with coverage
+yarn test:cov -- For unit tests with coverage
 bash
 ```
 

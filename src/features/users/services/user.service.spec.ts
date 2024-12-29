@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -5,7 +6,7 @@ import { EUserProviderKeys } from '../enums/user-providers.enum';
 import { IUsersRepository } from '../interfaces/user-repository.interface';
 import { UserRequestDto } from '../dtos/user-request.dto';
 import { User } from '../models/user.entity';
-import * as bcrypt from 'bcrypt';
+const bcrypt = require('bcryptjs');
 
 describe('UserService', () => {
   let userService: UserService;
