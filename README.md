@@ -82,6 +82,10 @@ yarn test:cov -- For unit tests with coverage
 bash
 ```
 
+### 6. Future Features
+- Add a queue for logical deletion of URLs without origin via RabbitMQ 🗑️.
+
+
 ## 🏆 Contribution
 Contributions are welcome! Feel free to open issues or submit pull requests to improve the project.
 
