@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { urlencoded } from 'express';
 import * as bodyParser from 'body-parser';
@@ -40,6 +40,10 @@ async function bootstrap() {
   await app.startAllMicroservices();
 
   await app.listen(env.port ?? 3000);
+
+  Logger.log(
+    `Swagger UI disponível em: http://localhost:${env.port}/swagger#/`,
+  );
 }
 
 bootstrap();

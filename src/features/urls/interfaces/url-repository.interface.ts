@@ -11,4 +11,5 @@ export interface IUrlRepository extends IRepository {
   updateUrlWithClickCount(shortUrl: string): Promise<void>;
   deleteUrl(filters: Partial<Url>): Promise<void>;
   findUrlsByUserId(userId: number): Promise<Url[]>;
+  updateOriginalUrl(shortUrl: string, newOriginalUrl: string): Promise<void>;
 }

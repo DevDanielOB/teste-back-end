@@ -44,4 +44,15 @@ export class UrlsRepository
   async deleteUrl(filters: Partial<Url>): Promise<void> {
     await this.update(filters, { deletedAt: new Date() });
   }
+
+  async updateOriginalUrl(
+    shortUrl: string,
+    newOriginalUrl: string,
+  ): Promise<void> {
+    await this.createQueryBuilder()
+      .update(Url)
+      .set({ originalUrl: newOriginalUrl })
+      .where('shortUrl = :shortUrl', { shortUrl })
+      .execute();
+  }
 }

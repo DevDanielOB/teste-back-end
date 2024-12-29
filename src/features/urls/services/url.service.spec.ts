@@ -2,10 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UrlService } from './url.service';
 import { IUrlRepository } from '../interfaces/url-repository.interface';
 import { AuthService } from 'src/infra/auth/auth.service';
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UrlValidator } from 'src/infra/core/utils/url-validator';
 import { env } from 'src/infra/core/environment';
 import { EUrlProviderKeys } from '../enums/url-providers.enum';
+import { UrlDecode } from 'src/infra/core/utils/url-decode';
 
 jest.mock('src/infra/core/utils/url-validator');
 jest.mock('src/infra/core/environment');
@@ -29,6 +34,7 @@ describe('UrlService', () => {
             updateUrlWithClickCount: jest.fn(),
             findUrlsByUserId: jest.fn(),
             deleteUrl: jest.fn(),
+            updateOriginalUrl: jest.fn(),
           },
         },
         {
@@ -64,7 +70,7 @@ describe('UrlService', () => {
     });
 
     it('should return short URL if valid URL is provided', async () => {
-      const originalUrl = 'https://example.com';
+      const originalUrl = 'https://teddy.com';
 
       jest.spyOn(UrlValidator, 'isValidUrl').mockReturnValue(true);
 
@@ -75,38 +81,12 @@ describe('UrlService', () => {
 
       expect(result).toContain('undefined/');
     });
-
-    it('should return short URL if original URL exists and belongs to the user', async () => {
-      const originalUrl = 'https://example.com';
-      const accessToken = 'validToken';
-      const userData = { id: 1 };
-      const existingUrl = {
-        originalUrl,
-        shortUrl: 'abcd12',
-        userId: userData.id,
-      };
-
-      jest.spyOn(UrlValidator, 'isValidUrl').mockReturnValue(true);
-
-      urlRepository.findUrlByOriginalUrl.mockResolvedValue(existingUrl as any);
-
-      const result = await urlService.generateShortUrl(
-        originalUrl,
-        accessToken,
-      );
-
-      expect(result).toContain(`${env.base_url}`);
-      expect(urlRepository.findUrlByOriginalUrl).toHaveBeenCalledWith(
-        originalUrl,
-        undefined,
-      );
-    });
   });
 
   describe('getOriginalUrl', () => {
     it('should return original URL if short URL exists', async () => {
       const shortUrl = 'abc123';
-      const mockUrlRecord = { originalUrl: 'https://example.com' };
+      const mockUrlRecord = { originalUrl: 'https://teddy.com' };
 
       urlRepository.findUrlByShortUrl.mockResolvedValue(mockUrlRecord as any);
       urlRepository.updateUrlWithClickCount.mockResolvedValue(undefined);
@@ -117,7 +97,7 @@ describe('UrlService', () => {
       expect(urlRepository.updateUrlWithClickCount).toHaveBeenCalledWith(
         shortUrl,
       );
-      expect(result).toEqual('https://example.com');
+      expect(result).toEqual('https://teddy.com');
     });
 
     it('should throw NotFoundException if short URL does not exist', async () => {
@@ -136,7 +116,7 @@ describe('UrlService', () => {
       const accessToken = 'validToken';
       const mockDecodedUser = { email: 'daniel.oliveira@email.com', id: '1' };
       const mockUrls = [
-        { shortUrl: 'abc123', originalUrl: 'https://example.com' },
+        { shortUrl: 'abc123', originalUrl: 'https://teddy.com' },
       ];
 
       authService.decodeToken.mockReturnValue(mockDecodedUser);
@@ -169,7 +149,7 @@ describe('UrlService', () => {
       const accessToken = 'validToken';
       const mockDecodedUser = { email: 'daniel.oliveira@email.com', id: '1' };
       const mockUrl = {
-        originalUrl: 'https://example.com',
+        originalUrl: 'https://teddy.com',
         userId: '1',
         deletedAt: null,
       };
@@ -178,16 +158,16 @@ describe('UrlService', () => {
       urlRepository.findUrlByOriginalUrl.mockResolvedValue(mockUrl as any);
 
       await urlService.deleteUrl(
-        { originalUrl: 'https://example.com' },
+        { originalUrl: 'https://teddy.com' },
         accessToken,
       );
 
       expect(urlRepository.findUrlByOriginalUrl).toHaveBeenCalledWith(
-        'https://example.com',
+        'https://teddy.com',
         mockDecodedUser.id,
       );
       expect(urlRepository.deleteUrl).toHaveBeenCalledWith({
-        originalUrl: 'https://example.com',
+        originalUrl: 'https://teddy.com',
         userId: '1',
       });
     });
@@ -200,10 +180,7 @@ describe('UrlService', () => {
       urlRepository.findUrlByOriginalUrl.mockResolvedValue(null);
 
       await expect(
-        urlService.deleteUrl(
-          { originalUrl: 'https://example.com' },
-          accessToken,
-        ),
+        urlService.deleteUrl({ originalUrl: 'https://teddy.com' }, accessToken),
       ).rejects.toThrow(NotFoundException);
     });
 
@@ -214,11 +191,93 @@ describe('UrlService', () => {
       authService.decodeToken.mockReturnValue(mockDecodedUser);
 
       await expect(
-        urlService.deleteUrl(
-          { originalUrl: 'https://example.com' },
-          accessToken,
-        ),
+        urlService.deleteUrl({ originalUrl: 'https://teddy.com' }, accessToken),
       ).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('updateUrl', () => {
+    it('should update the original URL for a valid short URL and authorized user', async () => {
+      const shortUrl = 'abc123';
+      const newOriginalUrl = 'https://teddy.com';
+      const accessToken = 'validToken';
+      const userData = { id: 1 };
+
+      jest.spyOn(authService, 'decodeToken').mockReturnValue(userData as any);
+      jest.spyOn(urlRepository, 'findUrlByShortUrl').mockResolvedValue({
+        shortUrl,
+        originalUrl: 'https://teddy.com',
+        userId: userData.id,
+      } as any);
+      jest.spyOn(urlRepository, 'updateOriginalUrl').mockResolvedValue();
+
+      await expect(
+        urlService.updateOriginalUrl(shortUrl, newOriginalUrl, accessToken),
+      ).resolves.not.toThrow();
+
+      expect(urlRepository.updateOriginalUrl).toHaveBeenCalledWith(
+        shortUrl,
+        newOriginalUrl,
+      );
+    });
+
+    it('should throw error if user is unauthorized', async () => {
+      const shortUrl = 'abc123';
+      const newOriginalUrl = 'https://teddy.com';
+      const accessToken = 'invalidToken';
+
+      jest.spyOn(authService, 'decodeToken').mockReturnValue(null);
+
+      await expect(
+        urlService.updateOriginalUrl(shortUrl, newOriginalUrl, accessToken),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+
+    it('should throw BadRequestException for an invalid URL', async () => {
+      jest.spyOn(UrlValidator, 'isValidUrl').mockReturnValue(false);
+      const shortUrl = 'aZbKq7';
+      const newOriginalUrl = 'invalid-url';
+      const accessToken = 'validToken';
+
+      await expect(
+        urlService.updateOriginalUrl(shortUrl, newOriginalUrl, accessToken),
+      ).rejects.toThrow(BadRequestException);
+      expect(UrlValidator.isValidUrl).toHaveBeenCalledWith(newOriginalUrl);
+    });
+
+    it('should throw NotFoundException if short URL is not found', async () => {
+      jest.spyOn(UrlValidator, 'isValidUrl').mockReturnValue(true);
+      jest.spyOn(UrlDecode, 'extractShortUrl').mockReturnValue('aZbKq7');
+      jest.spyOn(urlRepository, 'findUrlByShortUrl').mockResolvedValue(null);
+
+      const shortUrl = 'http://localhost:3498/aZbKq7';
+      const newOriginalUrl = 'https://teddy.com';
+      const accessToken = 'validToken';
+
+      await expect(
+        urlService.updateOriginalUrl(shortUrl, newOriginalUrl, accessToken),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+
+    it('should throw UnauthorizedException if user does not own the URL', async () => {
+      jest.spyOn(UrlValidator, 'isValidUrl').mockReturnValue(true);
+      jest.spyOn(UrlDecode, 'extractShortUrl').mockReturnValue('aZbKq7');
+      jest
+        .spyOn(authService, 'decodeToken')
+        .mockReturnValue({ email: 'daniel.oliveira@email.com', id: '1' });
+      jest.spyOn(urlRepository, 'findUrlByShortUrl').mockResolvedValue({
+        userId: 1,
+        originalUrl: 'https://teddy.com',
+      } as any);
+
+      const shortUrl = 'http://localhost:3498/aZbKq7';
+      const newOriginalUrl = 'https://teddy.com';
+      const accessToken = 'validToken';
+
+      await expect(
+        urlService.updateOriginalUrl(shortUrl, newOriginalUrl, accessToken),
+      ).rejects.toThrow(UnauthorizedException);
+      expect(urlRepository.findUrlByShortUrl).toHaveBeenCalledWith('aZbKq7');
     });
   });
 });

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   NotFoundException,
@@ -11,6 +12,7 @@ import { UrlValidator } from 'src/infra/core/utils/url-validator';
 import { env } from 'src/infra/core/environment';
 import { AuthService } from 'src/infra/auth/auth.service';
 import { Url } from '../models/url.entity';
+import { UrlDecode } from 'src/infra/core/utils/url-decode';
 
 @Injectable()
 export class UrlService implements IUrlService {
@@ -29,9 +31,7 @@ export class UrlService implements IUrlService {
       throw new Error('Invalid URL');
     }
 
-    if (accessToken) {
-      userData = this.authService.decodeToken(accessToken);
-    }
+    userData = accessToken ? this.decodeAndValidateToken(accessToken) : null;
     const recordExists = await this.urlRepository.findUrlByOriginalUrl(
       originalUrl,
       userData?.id,
@@ -52,25 +52,17 @@ export class UrlService implements IUrlService {
   }
 
   async getOriginalUrl(shortUrl: string): Promise<string> {
-    const url = await this.urlRepository.findUrlByShortUrl(shortUrl);
-
-    if (!url) {
-      throw new NotFoundException('Short URL not found');
-    }
+    const urlRecord = await this.validateAndFetchUrlByShortUrl(shortUrl);
 
     await this.urlRepository.updateUrlWithClickCount(shortUrl);
 
-    return url.originalUrl;
+    return urlRecord.originalUrl;
   }
 
   async getUrlsByUserId(accessToken: string): Promise<Url[]> {
     let userData = null;
 
-    userData = this.authService.decodeToken(accessToken);
-
-    if (!userData?.id) {
-      throw new UnauthorizedException('Invalid access token');
-    }
+    userData = this.decodeAndValidateToken(accessToken);
 
     const data = await this.urlRepository.findUrlsByUserId(userData.id);
 
@@ -83,11 +75,7 @@ export class UrlService implements IUrlService {
   async deleteUrl(filters: Partial<Url>, accessToken?: string): Promise<void> {
     let userData = null;
 
-    userData = this.authService.decodeToken(accessToken);
-
-    if (!userData?.id) {
-      throw new UnauthorizedException('Invalid access token');
-    }
+    userData = this.decodeAndValidateToken(accessToken);
 
     filters.userId = userData.id;
     const url = await this.urlRepository.findUrlByOriginalUrl(
@@ -99,5 +87,47 @@ export class UrlService implements IUrlService {
       throw new NotFoundException('URL not found');
     }
     await this.urlRepository.deleteUrl(filters);
+  }
+
+  async updateOriginalUrl(
+    shortUrl: string,
+    newOriginalUrl: string,
+    accessToken?: string,
+  ): Promise<void> {
+    let userData = null;
+    if (!UrlValidator.isValidUrl(newOriginalUrl)) {
+      throw new BadRequestException('Invalid URL');
+    }
+
+    userData = accessToken ? this.decodeAndValidateToken(accessToken) : null;
+
+    const urlRecord = await this.validateAndFetchUrlByShortUrl(shortUrl);
+
+    if (urlRecord.userId !== userData.id) {
+      throw new UnauthorizedException('You do not own this URL');
+    }
+
+    await this.urlRepository.updateOriginalUrl(
+      UrlDecode.extractShortUrl(shortUrl),
+      newOriginalUrl,
+    );
+  }
+
+  private decodeAndValidateToken(accessToken?: string): { id: string } {
+    const userData = this.authService.decodeToken(accessToken);
+    if (!userData?.id) {
+      throw new UnauthorizedException('Invalid access token');
+    }
+    return userData;
+  }
+
+  private async validateAndFetchUrlByShortUrl(shortUrl: string): Promise<Url> {
+    const decodedShortUrl = UrlDecode.extractShortUrl(shortUrl);
+    const urlRecord =
+      await this.urlRepository.findUrlByShortUrl(decodedShortUrl);
+    if (!urlRecord) {
+      throw new NotFoundException('Short URL not found');
+    }
+    return urlRecord;
   }
 }

@@ -20,6 +20,7 @@ import {
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -65,12 +66,12 @@ export class UrlController {
     `,
   })
   async shortenUrl(@Req() req: any, @Body() body: UrlRequestDto) {
-    const token = req.token || null;
+    const accessToken = req.token || null;
 
     const { originalUrl } = body;
     const shortenedUrl = await this.urlService.generateShortUrl(
       originalUrl,
-      token,
+      accessToken,
     );
     return shortenedUrl;
   }
@@ -91,8 +92,8 @@ export class UrlController {
     description: 'No content',
   })
   async getAllUrls(@Req() req: any) {
-    const token = req.token || null;
-    const urls = await this.urlService.getUrlsByUserId(token);
+    const accessToken = req.token || null;
+    const urls = await this.urlService.getUrlsByUserId(accessToken);
 
     if (urls.length === 0) {
       throw new HttpException('', 204);
@@ -135,8 +136,47 @@ export class UrlController {
     `,
   })
   async deleteUrl(@Req() req: any, @Body() body: UrlRequestDto) {
-    const token = req.token || null;
+    const accessToken = req.token || null;
     const { originalUrl } = body;
-    await this.urlService.deleteUrl({ originalUrl }, token);
+    await this.urlService.deleteUrl({ originalUrl }, accessToken);
+  }
+
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Patch('updateOrigin/:shortUrl')
+  @ApiOkResponse({
+    description: 'Ok',
+  })
+  @ApiUnauthorizedResponse({
+    description: `
+    - Invalid bearer token format
+    - Token Bearer is invalid
+    - You do not own this URL
+    `,
+  })
+  @ApiBadRequestResponse({
+    description: `
+    - URL not found
+    `,
+  })
+  @ApiParam({
+    name: 'shortUrl',
+    description: 'The short URL identifier',
+    example: 'http://localhost/aZbKq7',
+  })
+  async updateOriginalUrl(
+    @Param('shortUrl') shortUrl: string,
+    @Body() body: UrlRequestDto,
+    @Req() req: any,
+    @Res() res: Response,
+  ): Promise<void> {
+    const accessToken = req.token;
+    await this.urlService.updateOriginalUrl(
+      shortUrl,
+      body.originalUrl,
+      accessToken,
+    );
+
+    res.json({ originalUrl: body.originalUrl });
   }
 }

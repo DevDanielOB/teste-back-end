@@ -5,4 +5,9 @@ export interface IUrlService {
   getOriginalUrl(shortUrl: string): Promise<string>;
   getUrlsByUserId(accessToken: string): Promise<Url[]>;
   deleteUrl(filters: Partial<Url>, accessToken?: string): Promise<void>;
+  updateOriginalUrl(
+    shortUrl: string,
+    newOriginalUrl: string,
+    accessToken?: string,
+  ): Promise<void>;
 }
