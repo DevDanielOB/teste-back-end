@@ -28,7 +28,7 @@ Follow these steps to set up and run the project:
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/DevDanielOB/teste-back-end.git
-cd url-shortener
+cd teste-back-end
 ```
 
 ### 2. Install Dependencies
@@ -42,10 +42,10 @@ Create a `.env` file in the root directory and configure the following variables
 ```env
 ################################# SQL ##########################################################
 SQL_SERVER_DEVELOPMENT_BR=N
-SQL_SERVER_HOST=localhost
-SQL_SERVER_PORT=1433
-SQL_SERVER_USER='sa'
-SQL_SERVER_PASSWORD='dados'
+SQL_SERVER_HOST=localhost // Or your host
+SQL_SERVER_PORT=1433 // Or you port
+SQL_SERVER_USER='sa' // Or your user
+SQL_SERVER_PASSWORD='dados' // Or your password
 SQL_SERVER_DATABASE='db-teste-back-end'
 SQL_SERVER_POOL_SIZE=200
 SQL_SERVER_SSL=N
@@ -54,7 +54,7 @@ TYPEORM_APPLY_MIGRATION_ON_STARTUP='N'
 
 ##################### API ##########################################################
 NODE_ENV='development'
-PORT=3498
+PORT=3498 // Or your port
 JWT_SECRET='GqAUNp-hWjIJctiM0s4cDC33msGVmCAl2wCoueCeEvxFLKa2gE30VEfjNcSP9jLsBg3ei-svhJpOZ2TUWXuZTw'
 APP_URL='http://localhost'
 
@@ -72,6 +72,14 @@ The application will be available at `http://localhost:3000`.
 Open the Swagger API documentation at:
 ```
 http://localhost:3498/swagger#/
+
+### 6. Run the Tests
+Run the tests
+bash
+npm test -- For unit tests
+bash
+npm test:cov -- For unit tests with coverage
+bash
 ```
 
 ## 🏆 Contribution
