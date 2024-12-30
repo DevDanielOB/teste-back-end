@@ -75,7 +75,7 @@ Open the Swagger API documentation at:
 http://localhost:3498/swagger#/
 
 ```
-### 6. Access the API Documentation
+### 6. Unit tests
 Run the tests
 bash
 yarn test -- For unit tests
