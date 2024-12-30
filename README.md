@@ -42,10 +42,10 @@ Create a `.env` file in the root directory and configure the following variables
 ```env
 ################################# SQL ##########################################################
 SQL_SERVER_DEVELOPMENT_BR=N
-SQL_SERVER_HOST=localhost // Or your host
-SQL_SERVER_PORT=1433 // Or you port
-SQL_SERVER_USER='sa' // Or your user
-SQL_SERVER_PASSWORD='dados' // Or your password
+SQL_SERVER_HOST=localhost ## Or your host
+SQL_SERVER_PORT=1433 ## Or you port
+SQL_SERVER_USER='sa' ## Or your user
+SQL_SERVER_PASSWORD='dados' ## Or your password
 SQL_SERVER_DATABASE='db-teste-back-end'
 SQL_SERVER_POOL_SIZE=200
 SQL_SERVER_SSL=N
@@ -54,7 +54,7 @@ TYPEORM_APPLY_MIGRATION_ON_STARTUP='N'
 
 ##################### API ##########################################################
 NODE_ENV='development'
-PORT=3498 // Or your port
+PORT=3498 ## Or your port
 JWT_SECRET='GqAUNp-hWjIJctiM0s4cDC33msGVmCAl2wCoueCeEvxFLKa2gE30VEfjNcSP9jLsBg3ei-svhJpOZ2TUWXuZTw'
 APP_URL='http://localhost'
 
@@ -73,16 +73,16 @@ Open the Swagger API documentation at:
 ```
 http://localhost:3498/swagger#/
 
-### 6. Run the Tests
+```
+### 6. Access the API Documentation
 Run the tests
 bash
 yarn test -- For unit tests
 bash
 yarn test:cov -- For unit tests with coverage
 bash
-```
 
-### 6. Future Features
+### 7. Future Features
 - Add a queue for logical deletion of URLs without origin via RabbitMQ 🗑️.
 
 
