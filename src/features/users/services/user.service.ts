@@ -11,7 +11,7 @@ import { EUserProviderKeys } from '../enums/user-providers.enum';
 import { IUsersRepository } from '../interfaces/user-repository.interface';
 import { User } from '../models/user.entity';
 import { plainToClass } from 'class-transformer';
-const bcrypt = require('bcryptjs');
+import * as bcrypt from 'bcrypt';
 
 import { IUserService } from '../interfaces/user-service.interface';
 
