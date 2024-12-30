@@ -6,7 +6,7 @@ import { EUserProviderKeys } from '../enums/user-providers.enum';
 import { IUsersRepository } from '../interfaces/user-repository.interface';
 import { UserRequestDto } from '../dtos/user-request.dto';
 import { User } from '../models/user.entity';
-const bcrypt = require('bcryptjs');
+import * as bcrypt from 'bcrypt';
 
 describe('UserService', () => {
   let userService: UserService;
