@@ -29,6 +29,7 @@ Follow these steps to set up and run the project:
 ```bash
 git clone https://github.com/DevDanielOB/teste-back-end.git
 cd teste-back-end
+Branch: master or v.1.0.3
 ```
 
 ### 2. Install Dependencies
