@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DatabaseModule } from './infra/database/database.module';
-import { UsersModule } from './features/users/users.module';
-import { AuthModule } from './infra/auth/auth.module';
-import { UrlsModule } from './features/urls/urls.module';
+import { DatabaseModule } from './shared/database/database.module';
+import { UsersModule } from './modules/user/users.module';
+import { UrlsModule } from './modules/url/urls.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [DatabaseModule, UsersModule, UrlsModule, AuthModule],

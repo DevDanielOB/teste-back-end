@@ -5,7 +5,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { urlencoded } from 'express';
 import * as bodyParser from 'body-parser';
-import { env } from './infra/core/environment';
+import { env } from './shared/environment';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
