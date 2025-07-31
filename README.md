@@ -66,7 +66,7 @@ TYPEORM_APPLY_MIGRATION_ON_STARTUP='N'
 NODE_ENV='development'
 PORT=3498 ## Or your port
 JWT_SECRET='GqAUNp-hWjIJctiM0s4cDC33msGVmCAl2wCoueCeEvxFLKa2gE30VEfjNcSP9jLsBg3ei-svhJpOZ2TUWXuZTw'
-APP_URL='http://localhost'
+APP_URL='https://localhost'
 ```
 
 ### 4. Set Up SQL Server Using Docker

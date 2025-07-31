@@ -111,7 +111,7 @@ export class UrlController {
       const originalUrl = await this.urlService.getOriginalUrl(shortUrl);
       console.log('Redirecting to:', originalUrl);
 
-      return res.json(originalUrl);
+      return res.redirect(originalUrl);
     } catch (error) {
       if (error instanceof NotFoundException) {
         return res.status(404).json({ message: 'Short URL not found' });

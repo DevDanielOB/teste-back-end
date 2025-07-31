@@ -42,7 +42,7 @@ async function bootstrap() {
   await app.listen(env.port ?? 3000);
 
   Logger.log(
-    `Swagger UI disponível em: http://localhost:${env.port}/swagger#/`,
+    `Swagger UI disponível em: ${env.base_url}/swagger#/`,
   );
 }
 
