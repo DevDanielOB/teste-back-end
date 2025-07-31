@@ -99,6 +99,10 @@ export class UrlService implements IUrlService {
       throw new BadRequestException('Invalid URL');
     }
 
+    if(!accessToken) {
+      throw new UnauthorizedException('Access token is required');
+    }
+
     userData = accessToken ? this.decodeAndValidateToken(accessToken) : null;
 
     const urlRecord = await this.validateAndFetchUrlByShortUrl(shortUrl);

@@ -109,7 +109,6 @@ export class UrlController {
   ) {
     try {
       const originalUrl = await this.urlService.getOriginalUrl(shortUrl);
-      console.log('Redirecting to:', originalUrl);
 
       return res.redirect(originalUrl);
     } catch (error) {
@@ -177,6 +176,8 @@ export class UrlController {
       body.originalUrl,
       accessToken,
     );
+
+    console.log(body.originalUrl);
 
     res.json({ originalUrl: body.originalUrl });
   }
