@@ -22,6 +22,12 @@ export const readEnv = () => {
         process.env.SQL_SERVER_TIMEOUT_SECONDS ?? 30000
       };trustServerCertificate=true;connectionLimit=${process.env.SQL_SERVER_POOL_SIZE ?? 10}`,
     },
+    telemetry: {
+      traceUrl: process.env.OPEN_TELEMETRY_TRACE_URL,
+      metricsUrl: process.env.OPEN_TELEMETRY_METRICS_URL,
+      logsUrl: process.env.OPEN_TELEMETRY_LOGS_URL,
+      serviceName: process.env.ENVIRONMENT_DESCRIPTION,
+    },
     jwtSecret: process.env.JWT_SECRET,
     base_url: `${process.env.APP_URL}:${process.env.PORT}`,
   } as unknown as AppEnvironment;

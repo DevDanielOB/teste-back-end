@@ -34,28 +34,22 @@ export class Url {
 
   @CreateDateColumn({
     name: 'creation_timestamp',
-    type: 'datetimeoffset',
-    precision: 7,
-    default: () =>
-      "SYSDATETIMEOFFSET() AT TIME ZONE 'E. South America Standard Time'",
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   creationTimestamp: Date;
 
   @UpdateDateColumn({
     name: 'update_timestamp',
-    type: 'datetimeoffset',
-    precision: 7,
-    default: () =>
-      "SYSDATETIMEOFFSET() AT TIME ZONE 'E. South America Standard Time'",
-    onUpdate:
-      "SYSDATETIMEOFFSET() AT TIME ZONE 'E. South America Standard Time'",
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
   })
   updateTimestamp: Date;
 
   @DeleteDateColumn({
     name: 'deleted_at',
-    type: 'datetimeoffset',
-    precision: 7,
+    type: 'timestamptz',
     nullable: true,
   })
   deletedAt: Date | null;

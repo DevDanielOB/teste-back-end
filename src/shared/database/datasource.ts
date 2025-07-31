@@ -6,9 +6,9 @@ import { env } from '../environment';
 env.config();
 
 const datasource = new DataSource({
-  type: 'mssql',
+  type: 'postgres',
   host: env.database.host ?? 'localhost',
-  port: env.database.port ?? 1433,
+  port: env.database.port ?? 5432,
   username: env.database.username,
   password: env.database.password,
   database: env.database.database,
@@ -17,13 +17,6 @@ const datasource = new DataSource({
   namingStrategy: new SnakeNamingStrategy(),
   logging: false,
   migrations: [__dirname + '/migrations/*.ts'],
-  connectionTimeout: env.database.connectionTimeout ?? 60000,
-  requestTimeout: env.database.connectionTimeout ?? 60000,
-  poolSize: env.database.poolSize ?? 100,
-  extra: {
-    trustServerCertificate: true,
-    requestTimeout: env.database.connectionTimeout ?? 60000,
-  },
 } as unknown as DataSourceOptions);
 
 export default datasource;

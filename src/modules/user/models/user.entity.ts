@@ -46,15 +46,12 @@ export class User {
   passwordHash: string;
 
   @CreateDateColumn({
-    name: 'creation_timestamp',
-    type: 'datetimeoffset',
-    precision: 7,
-    default: () =>
-      "SYSDATETIMEOFFSET() AT TIME ZONE 'E. South America Standard Time'",
-    comment:
-      'Data e hora de criação do registro / Record creation date and time',
-  })
-  creationTimestamp: Date;
+  name: 'creation_timestamp',
+  type: 'timestamptz',
+  default: () => 'CURRENT_TIMESTAMP',
+  comment: 'Data e hora de criação do registro / Record creation date and time',
+})
+creationTimestamp: Date;
 
   @OneToMany(() => Url, (url) => url.user)
   urls: Url[];
