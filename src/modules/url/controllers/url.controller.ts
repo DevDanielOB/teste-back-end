@@ -177,8 +177,6 @@ export class UrlController {
       accessToken,
     );
 
-    console.log(body.originalUrl);
-
     res.json({ originalUrl: body.originalUrl });
   }
 }

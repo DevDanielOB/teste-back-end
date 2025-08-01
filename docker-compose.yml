@@ -39,5 +39,22 @@ services:
       postgres:
         condition: service_healthy
 
+  test:
+    build: .
+    container_name: nest-tests
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SQL_SERVER_HOST: postgres
+      SQL_SERVER_PORT: 5432
+      SQL_SERVER_USER: postgres
+      SQL_SERVER_PASSWORD: postgres
+      SQL_SERVER_DATABASE: teste
+      NODE_ENV: test
+    command: yarn test
+
 volumes:
   postgres_data:
+
+  

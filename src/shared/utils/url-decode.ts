@@ -1,6 +1,6 @@
 export class UrlDecode {
-  static extractShortUrl(fullUrl: string): string {
-    const parts = fullUrl.split('/');
-    return parts[parts.length - 1];
-  }
+  static extractShortUrl(url: string): string {
+  const parsed = url.trim().replace(/^https?:\/\/[^/]+\/?/, '');
+  return parsed.split('/')[0];
+}
 }

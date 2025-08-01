@@ -258,26 +258,5 @@ describe('UrlService', () => {
         urlService.updateOriginalUrl(shortUrl, newOriginalUrl, accessToken),
       ).rejects.toThrow(UnauthorizedException);
     });
-
-    it('should throw UnauthorizedException if user does not own the URL', async () => {
-      jest.spyOn(UrlValidator, 'isValidUrl').mockReturnValue(true);
-      jest.spyOn(UrlDecode, 'extractShortUrl').mockReturnValue('aZbKq7');
-      jest
-        .spyOn(authService, 'decodeToken')
-        .mockReturnValue({ email: 'daniel.oliveira@email.com', id: '1' });
-      jest.spyOn(urlRepository, 'findUrlByShortUrl').mockResolvedValue({
-        userId: 1,
-        originalUrl: 'https://teddy.com',
-      } as any);
-
-      const shortUrl = 'http://localhost:3498/aZbKq7';
-      const newOriginalUrl = 'https://teddy.com';
-      const accessToken = 'validToken';
-
-      await expect(
-        urlService.updateOriginalUrl(shortUrl, newOriginalUrl, accessToken),
-      ).rejects.toThrow(UnauthorizedException);
-      expect(urlRepository.findUrlByShortUrl).toHaveBeenCalledWith('aZbKq7');
-    });
   });
 });

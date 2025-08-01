@@ -28,7 +28,7 @@ export class UrlService implements IUrlService {
   ): Promise<string> {
     let userData = null;
     if (!UrlValidator.isValidUrl(originalUrl)) {
-      throw new Error('Invalid URL');
+      throw new BadRequestException('Invalid URL');
     }
 
     userData = accessToken ? this.decodeAndValidateToken(accessToken) : null;
@@ -40,7 +40,14 @@ export class UrlService implements IUrlService {
     if (recordExists && recordExists.userId === userData?.id) {
       return `${env.base_url}/${recordExists.shortUrl}`;
     }
-    const shortUrl = Math.random().toString(36).substring(2, 8);
+
+    let shortUrl: string;
+    let exists = true;
+    do {
+      shortUrl = Math.random().toString(36).substring(2, 8);
+      const found = await this.urlRepository.findUrlByShortUrl(shortUrl);
+      exists = !!found;
+    } while (exists);
 
     await this.urlRepository.shortenUrl({
       originalUrl,
@@ -61,6 +68,10 @@ export class UrlService implements IUrlService {
 
   async getUrlsByUserId(accessToken: string): Promise<Url[]> {
     let userData = null;
+
+    if(!accessToken) {
+      throw new UnauthorizedException('Access token is required');
+    }
 
     userData = this.decodeAndValidateToken(accessToken);
 
@@ -89,33 +100,38 @@ export class UrlService implements IUrlService {
     await this.urlRepository.deleteUrl(filters);
   }
 
-  async updateOriginalUrl(
-    shortUrl: string,
-    newOriginalUrl: string,
-    accessToken?: string,
-  ): Promise<void> {
-    let userData = null;
-    if (!UrlValidator.isValidUrl(newOriginalUrl)) {
-      throw new BadRequestException('Invalid URL');
-    }
-
-    if(!accessToken) {
-      throw new UnauthorizedException('Access token is required');
-    }
-
-    userData = accessToken ? this.decodeAndValidateToken(accessToken) : null;
-
-    const urlRecord = await this.validateAndFetchUrlByShortUrl(shortUrl);
-
-    if (urlRecord.userId !== userData.id) {
-      throw new UnauthorizedException('You do not own this URL');
-    }
-
-    await this.urlRepository.updateOriginalUrl(
-      UrlDecode.extractShortUrl(shortUrl),
-      newOriginalUrl,
-    );
+async updateOriginalUrl(
+  shortUrl: string,
+  newOriginalUrl: string,
+  accessToken?: string,
+): Promise<void> {
+  if (!UrlValidator.isValidUrl(newOriginalUrl)) {
+    throw new BadRequestException('Invalid URL');
   }
+
+  if (!accessToken) {
+    throw new UnauthorizedException('Access token is required');
+  }
+
+  const userData = this.decodeAndValidateToken(accessToken);
+  const extractedShortUrl = UrlDecode.extractShortUrl(shortUrl);
+
+  const urlRecord = await this.urlRepository.findUrlByShortUrl(extractedShortUrl);
+
+  if (!urlRecord) {
+    throw new NotFoundException('Short URL not found');
+  }
+
+  if (String(urlRecord.userId) !== String(userData.id)) {
+    throw new UnauthorizedException('You do not own this URL');
+  }
+
+  await this.urlRepository.updateOriginalUrl(
+    extractedShortUrl,
+    newOriginalUrl,
+  );
+}
+
 
   private decodeAndValidateToken(accessToken?: string): { id: string } {
     const userData = this.authService.decodeToken(accessToken);
