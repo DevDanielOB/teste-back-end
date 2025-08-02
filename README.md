@@ -1,146 +1,81 @@
 # 🔗 URL Shortener Project
 
-Welcome to the URL Shortener Project! This application provides a simple and efficient way to shorten long URLs, manage them, and redirect to the original links. Built with modern technologies, it ensures performance, scalability, and ease of use.
+Este é um encurtador de URLs simples e eficiente. Com ele, você pode transformar URLs longas em versões curtas, com suporte a redirecionamento e autenticação via JWT.
 
-## 🚀 Features
+## 🚀 Tecnologias Utilizadas
 
-- 🖋️ **Node.js** (v20+): Backend development.
-- 🌐 **NestJS**: Framework for a structured and scalable architecture.
-- 📊 **TypeORM**: Database manipulation and ORM.
-- 📊 **Swagger**: Comprehensive API documentation.
-- 🔐 **Authentication**: JWT-based auth
-
-## 🎩 Technologies Used
-
-- **Node.js** (v20 or higher)
+- **Node.js** (v20+)
 - **NestJS**
 - **TypeORM**
-- **Swagger** for API documentation
-- **PostgreSQL/MySQL/SQL Server** (configurable with TypeORM)
+- **Swagger** (documentação da API)
+- **PostgreSQL / MySQL / SQL Server** (configurável)
+- **Docker** e **Docker Compose**
+- **OpenTelemetry** (telemetria e observabilidade)
 
-## 📄 Pre-requisites
+## 📦 Pré-requisitos
 
-Ensure you have the following installed:
+- [Node.js](https://nodejs.org/) v20 ou superior (apenas se quiser rodar localmente sem Docker)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
-- **Node.js** v20 or higher
-- **npm** (Node Package Manager)
-- **Docker**
+## ⚙️ Como Rodar o Projeto
 
-## 🔍 Getting Started
-
-Follow these steps to set up and run the project:
-
-### 1. Clone the Repository
+1. **Clone o repositório**
 
 ```bash
 git clone https://github.com/DevDanielOB/teste-back-end.git
 cd teste-back-end
-# Branch: master or v.1.0.3
 ```
 
-### 2. Install Dependencies
+2. **Crie o arquivo `.env`**
 
-Install all required packages using npm:
+Copie o `.env.example` para `.env` e ajuste se necessário.
 
 ```bash
-npm install
+cp .env.example .env
 ```
 
-### 3. Configure the Environment
-
-Create a `.env` file in the root directory and configure the following variables or use the `.env.example`:
-
-```env
-################################# SQL ##########################################################
-SQL_SERVER_DEVELOPMENT_BR=N
-SQL_SERVER_HOST=localhost ## Or your host
-SQL_SERVER_PORT=1433 ## Or your port
-SQL_SERVER_USER='sa' ## Or your user
-SQL_SERVER_PASSWORD='dados' ## Or your password
-SQL_SERVER_DATABASE='db-tcLcc_SERVER_POOL_SIZE=200
-SQL_SERVER_SSL=N
-SQL_SERVER_TIMEOUT_SECONDS=30000
-TYPEORM_APPLY_MIGRATION_ON_STARTUP='N'
-
-##################### API ##########################################################
-NODE_ENV='development'
-PORT=3498 ## Or your port
-JWT_SECRET='GqAUNp-hWjIJctiM0s4cDC33msGVmCAl2wCoueCeEvxFLKa2gE30VEfjNcSP9jLsBg3ei-svhJpOZ2TUWXuZTw'
-APP_URL='https://localhost'
-```
-
-### 4. Set Up SQL Server Using Docker
-
-If you don’t have an existing SQL Server instance, you can use Docker to set one up:
-
-1. Pull the SQL Server image:
-   ```bash
-   docker pull mcr.microsoft.com/mssql/server:2022-latest
-   ```
-2. Run the container:
-   ```bash
-   docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=SenhaForte123!' -p 1433:1433 --name sqlserver-container -d mcr.microsoft.com/mssql/server:2022-latest
-   ```
-3. Verify the container is running:
-   ```bash
-   docker ps
-   ```
-4. Update your `.env` file with the appropriate credentials (`SA_PASSWORD=SenhaForte123!`).
-
-### 5. Install SQL Server Management Studio (SSMS)
-
-1. Download the latest version of SQL Server Management Studio from [Microsoft's official page](https://aka.ms/ssmsfullsetup).
-2. Run the installer and follow the on-screen instructions to complete the installation.
-3. Open SSMS and connect to your local SQL Server instance:
-   - Server name: `localhost,1433`
-   - Authentication: `SQL Server Authentication`
-   - Login: `sa`
-   - Password: `SenhaForte123!`
-
-### 6. Create the Database
-
-Once connected to SSMS:
-
-1. Right-click on `Databases` in the Object Explorer.
-2. Select `New Database...`.
-3. Enter `db-teste-back-end` as the database name.
-4. Click `OK` to create the database.
-
-### 7. Start the Application
-
-Run the server:
+3. **Suba a aplicação com Docker Compose**
 
 ```bash
-npm start
+docker compose up --build
 ```
 
-The application will be available at `http://localhost:3498`.
+A API estará disponível em:  
+➡️ `http://localhost:3498`
 
-### 8. Access the API Documentation
+4. **Acesse a documentação Swagger**
 
-Open the Swagger API documentation at:
-
+```text
+http://localhost:3498/swagger
 ```
-http://localhost:3498/swagger#/
-```
 
-### 9. Unit tests
+## 🧪 Executando os Testes
 
-Run the tests:
+Para rodar os testes com Docker Compose:
 
 ```bash
-yarn test # For unit tests
+docker compose -f docker-compose.test.yml up --build
 ```
+
+Ou se o arquivo já estiver integrado:
 
 ```bash
-yarn test:cov # For unit tests with coverage
+docker compose up test
 ```
 
-### 10. Future Features
+## ✅ Funcionalidades
 
-- Add a queue for logical deletion of URLs without origin via RabbitMQ 🗑️.
+- Criar URLs encurtadas
+- Redirecionamento automático
+- Autenticação via JWT
+- Validação de URLs
+- Documentação Swagger
 
-## 🏆 Contribution
+## 📌 Roadmap
 
-Contributions are welcome! Feel free to open issues or submit pull requests to improve the project.
+- Fila para exclusão lógica com RabbitMQ 🗑️
 
+## 🤝 Contribuições
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests.
